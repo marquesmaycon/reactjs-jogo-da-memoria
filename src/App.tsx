@@ -39,6 +39,7 @@ const App = () => {
         for (let i in tmpGrid) {
           if (tmpGrid[i].shown) {
             tmpGrid[i].permanentShown = true;
+            tmpGrid[i].paired = true;
             tmpGrid[i].shown = false;
           };
         };
@@ -64,6 +65,12 @@ const App = () => {
     };
   }, [shownCount, gridItems])
 
+  useEffect(()=>{
+    if(gridItems.every(item => item.permanentShown === true)) {
+      setPlaying(false);
+    }
+  }, [moveCount, gridItems])
+
   function resetAndCreateGrid() {
     // 1- resetar o jogo
     setTimeElapsed(0);
@@ -73,7 +80,7 @@ const App = () => {
     let tmpGrid: GridItemType[] = []
     for(let i = 0; i < (items.length * 2); i++) {
       tmpGrid.push({
-        item: null, shown: false, permanentShown: false
+        item: null, shown: false, permanentShown: false, paired: false
       });
     };
     // 3- preencher o grid
@@ -127,8 +134,8 @@ const App = () => {
             <GridItem
               key={index}
               item={item}
-              onClick={()=>handleItemClick(index)}
-            />
+              onClick={() => handleItemClick(index)}
+              />
           ))}
         </C.Grid>
       </C.GridArea>
